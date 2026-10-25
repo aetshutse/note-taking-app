@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css"
+import "./theme.css"
 import { useMemo } from "react"
 import { Container } from "react-bootstrap"
 import { Routes, Route, Navigate } from "react-router-dom"

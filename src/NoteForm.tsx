@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import CreatableReactSelect from "react-select/creatable"
 import type { NoteData, Tag } from "./App"
 import { v4 as uuidV4 } from "uuid"
+import { selectTheme } from "./selectTheme"
 
 type NoteFormProps = {
   onSubmit: (data: NoteData) => void
@@ -50,6 +51,7 @@ export function NoteForm({
             <Form.Group controlId="tags">
               <Form.Label>Tags</Form.Label>
               <CreatableReactSelect
+                theme={selectTheme}
                 onCreateOption={label => {
                   const newTag = { id: uuidV4(), label }
                   onAddTag(newTag)

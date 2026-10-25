@@ -1,0 +1,49 @@
+:root {
+  --bs-blue: #25d366;
+  --bs-primary: #25d366;
+  --bs-primary-rgb: 37, 211, 102;
+  --bs-primary-text-emphasis: #0e5430;
+  --bs-primary-bg-subtle: #d3f6e1;
+  --bs-primary-border-subtle: #9fe8bd;
+  --bs-link-color: #128c7e;
+  --bs-link-color-rgb: 18, 140, 126;
+  --bs-link-hover-color: #075e54;
+  --bs-link-hover-color-rgb: 7, 94, 84;
+  --bs-focus-ring-color: rgba(37, 211, 102, 0.25);
+}
+
+.btn-primary {
+  --bs-btn-bg: #25d366;
+  --bs-btn-border-color: #25d366;
+  --bs-btn-hover-bg: #20bd5c;
+  --bs-btn-hover-border-color: #1eb457;
+  --bs-btn-focus-shadow-rgb: 37, 211, 102;
+  --bs-btn-active-bg: #1eaa52;
+  --bs-btn-active-border-color: #1ca04d;
+  --bs-btn-disabled-bg: #25d366;
+  --bs-btn-disabled-border-color: #25d366;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #128c7e;
+  --bs-btn-border-color: #128c7e;
+  --bs-btn-hover-bg: #128c7e;
+  --bs-btn-hover-border-color: #128c7e;
+  --bs-btn-focus-shadow-rgb: 18, 140, 126;
+  --bs-btn-active-bg: #075e54;
+  --bs-btn-active-border-color: #075e54;
+  --bs-btn-disabled-color: #128c7e;
+  --bs-btn-disabled-border-color: #128c7e;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: #86dca4;
+  box-shadow: 0 0 0 0.25rem rgba(37, 211, 102, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: #25d366;
+  border-color: #25d366;
+}

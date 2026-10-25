@@ -13,6 +13,7 @@ import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
 import type { Tag } from "./App"
 import styles from "./NoteList.module.css"
+import { selectTheme } from "./selectTheme"
 
 type SimplifiedNote = {
   tags: Tag[]
@@ -94,6 +95,7 @@ export function NoteList({
             <Form.Group controlId="tags">
               <Form.Label>Tags</Form.Label>
               <ReactSelect
+                theme={selectTheme}
                 value={selectedTags.map(tag => {
                   return { label: tag.label, value: tag.id }
                 })}
