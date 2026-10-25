@@ -2,6 +2,12 @@
 
 A browser-based notes app built with React, TypeScript, and Vite. It supports Markdown notes, tags, search, and user-triggered AI summaries. Notes remain in the current browser's local storage; they are not synced to an account or stored on the server.
 
+## Live demo
+
+[Open the Note Taking App](https://note-taking-app-jyr7.onrender.com)
+
+The free Render service may spin down when idle, so the first request after a period of inactivity can take longer. Notes are stored in your browser and are not synced between devices.
+
 ## Requirements
 
 - Node.js 22.12 or later
