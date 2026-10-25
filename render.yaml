@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: note-taking-app
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: AI_KEY
+        sync: false
+      - key: AI_URL
+        value: https://api.groq.com/openai/v1
+      - key: AI_MODEL
+        sync: false
