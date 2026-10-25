@@ -2,28 +2,42 @@
 
 ## What This App Is
 
-This is a single-page React application for managing notes in the browser. It has no backend or account system. Notes and tags are persisted in the current browser profile using `localStorage`, so they do not automatically sync to another device or browser.
+This is a single-page React application for managing notes in the browser. Notes and tags are persisted in the current browser profile using `localStorage`, so they do not automatically sync to another device or browser. The project also has an Express API foundation with a health endpoint; AI functionality and server-side note storage have not been added.
 
 ## Start, Check, And Build
 
 Run these commands from the repository root, the folder containing `package.json`. In VS Code, choose the Command Prompt terminal profile if you prefer not to use PowerShell.
 
+Install dependencies once:
+
 ```cmd
 npm ci
+```
+
+Start the API and frontend in separate terminals from the repository root:
+
+```cmd
+npm run dev:server
+```
+
+```cmd
 npm run dev
 ```
 
-Open the URL printed by Vite (normally `http://localhost:5173`). Keep the dev-server terminal open. Stop it with `Ctrl+C`.
+Open the URL printed by Vite (normally `http://localhost:5173`). Keep both terminals open while developing; stop each process with `Ctrl+C`. The API listens on port `3001` by default, or uses the port in the `PORT` environment variable when set (as Render does). No AI provider credentials are needed for this health endpoint. Vite proxies `/api` requests to the API. Check the health endpoint directly at `http://localhost:3001/api/health` or through Vite at `http://localhost:5173/api/health`.
 
 Other project scripts:
 
 ```cmd
+npm run dev:server
 npm run build
 npm run lint
 npm run preview
 ```
 
 `npm run build` runs `tsc -b` followed by `vite build`; generated production files go in `dist`. `npm run preview` serves that build and should be run after a successful build. `npm run lint` checks the source with ESLint.
+
+`npm run dev:server` starts the Express API and restarts it when server files change.
 
 If `package-lock.json` is present, `npm ci` installs its exact dependency versions and recreates `node_modules`. Use `npm install` if there is no lock file or when intentionally adding/updating dependencies. Do not move or commit `node_modules`; it is generated from the package files.
 
@@ -37,11 +51,12 @@ The current runtime packages are:
 - `react-select`: searchable, multi-select tag controls.
 - `react-markdown`: renders note Markdown as page content.
 - `uuid`: creates unique note and tag IDs.
+- `express`: provides the server-side API foundation.
 
 The project-specific install command when adding these to a fresh scaffold is:
 
 ```cmd
-npm install bootstrap react-bootstrap react-markdown react-router-dom react-select uuid
+npm install bootstrap express react-bootstrap react-markdown react-router-dom react-select uuid
 npm install --save-dev @types/uuid
 ```
 
@@ -60,6 +75,8 @@ Vite, TypeScript, React's Vite plugin, the React Compiler plugin, ESLint, and th
 - `src/Note.tsx`: note detail screen, Markdown rendering, and Edit/Delete/Back controls.
 - `src/EditNote.tsx`: edit screen; loads the note from `NoteLayout` and passes its existing values into `NoteForm`.
 - `src/NoteList.module.css`: local styles for note cards.
+- `server/app.js`: defines the Express app and `/api/health` endpoint.
+- `server/index.js`: validates the port and starts the API listener.
 
 ## Page Routes
 
@@ -68,6 +85,7 @@ Vite, TypeScript, React's Vite plugin, the React Compiler plugin, ESLint, and th
 - `/:id`: view one note.
 - `/:id/edit`: edit one note.
 - Any unmatched path redirects to `/`.
+- `GET /api/health`: API health check, available directly on port `3001` and through Vite's `/api` proxy.
 
 `BrowserRouter` uses the browser URL for navigation. `NoteLayout` is the parent route for `/:id` and provides the matching note as outlet context to the detail and edit screens.
 
