@@ -2,7 +2,7 @@
 
 ## What This App Is
 
-This is a single-page React application for managing notes in the browser. Notes and tags are persisted in the current browser profile using `localStorage`, so they do not automatically sync to another device or browser. Its Express API now exposes a note-summarization endpoint using an OpenAI-compatible provider; the frontend has not yet been connected to it. Notes are not stored on the server.
+This is a single-page React application for managing notes in the browser. Notes and tags are persisted in the current browser profile using `localStorage`, so they do not automatically sync to another device or browser. The note detail screen can request an AI summary through the Express API and an OpenAI-compatible provider. Notes and generated summaries are not stored on the server.
 
 ## Start, Check, And Build
 
@@ -35,6 +35,7 @@ npm run dev:server
 npm run build
 npm run lint
 npm test
+npm start
 npm run preview
 ```
 
@@ -43,6 +44,15 @@ npm run preview
 `npm run dev:server` starts the Express API and restarts it when server files change.
 
 `npm test` runs the API validation, rate-limit, provider-failure, and mocked OpenAI-compatible integration tests. These tests do not need a real provider key or make paid model requests.
+
+For a production-shaped local run, build and start the Express service:
+
+```cmd
+npm run build
+npm start
+```
+
+Express serves both the built frontend and API on the same port. Visit `http://localhost:3001`, and verify a direct app-route refresh such as `http://localhost:3001/example-note-id` returns the app shell. Check `http://localhost:3001/api/health` for the API health response. If AI credentials are configured, the summarize endpoint can also be smoke-tested; otherwise it returns HTTP 503 without attempting a provider request. `npm start` reads `.env` when present and uses the `PORT` value supplied by the host, defaulting to `3001`.
 
 If `package-lock.json` is present, `npm ci` installs its exact dependency versions and recreates `node_modules`. Use `npm install` if there is no lock file or when intentionally adding/updating dependencies. Do not move or commit `node_modules`; it is generated from the package files.
 
@@ -82,10 +92,11 @@ Vite, TypeScript, React's Vite plugin, the React Compiler plugin, ESLint, and th
 - `src/Note.tsx`: note detail screen, Markdown rendering, and Edit/Delete/Back controls.
 - `src/EditNote.tsx`: edit screen; loads the note from `NoteLayout` and passes its existing values into `NoteForm`.
 - `src/NoteList.module.css`: local styles for note cards.
-- `server/app.js`: defines the Express app and `/api/health` endpoint.
-- `server/index.js`: validates the port and starts the API listener.
+- `server/app.js`: defines the Express API routes and, in production, serves the built frontend with a browser-route fallback.
+- `server/index.js`: validates the port and starts the API and frontend listener.
 - `server/ai.js`: validates provider configuration and requests a note summary from the model.
 - `server/*.test.js`: API and mocked provider tests.
+- `npm start`: runs the production Express server, which serves `dist` and the API from one origin.
 
 ## Page Routes
 
@@ -98,6 +109,8 @@ Vite, TypeScript, React's Vite plugin, the React Compiler plugin, ESLint, and th
 - `POST /api/summarize`: accepts a JSON `title` and `markdown`, then returns `{ "summary": "..." }`. The endpoint validates input, limits request size and frequency, and does not persist note content.
 
 `BrowserRouter` uses the browser URL for navigation. `NoteLayout` is the parent route for `/:id` and provides the matching note as outlet context to the detail and edit screens.
+
+When started with `npm start`, Express serves `dist` and falls back to `index.html` for browser routes, so direct navigation and refreshes continue to work. Unknown `/api` paths return JSON 404 responses instead of the frontend shell.
 
 ## Data And User Actions
 

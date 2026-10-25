@@ -1,14 +1,20 @@
 import express from "express"
+import { existsSync } from "node:fs"
+import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 import rateLimit from "express-rate-limit"
 import { AIConfigurationError, summarizeNote } from "./ai.js"
 
 const MAX_TITLE_LENGTH = 200
 const MAX_MARKDOWN_LENGTH = 40_000
+const DIST_DIRECTORY = fileURLToPath(new URL("../dist/", import.meta.url))
+const INDEX_FILE = join(DIST_DIRECTORY, "index.html")
 
 export function createApp({
   summarize = summarizeNote,
   rateLimitLimit = 10,
   rateLimitWindowMs = 15 * 60 * 1000,
+  serveFrontend = false,
 } = {}) {
   const app = express()
 
@@ -73,6 +79,22 @@ export function createApp({
       })
     }
   })
+
+  if (serveFrontend) {
+    if (!existsSync(INDEX_FILE)) {
+      throw new Error("Production frontend not found. Run npm run build before npm start.")
+    }
+
+    app.use(express.static(DIST_DIRECTORY))
+    app.use("/api", (_request, response) => {
+      response.status(404).json({ error: "API endpoint not found." })
+    })
+    app.get("/{*path}", (_request, response, next) => {
+      response.sendFile(INDEX_FILE, error => {
+        if (error) next(error)
+      })
+    })
+  }
 
   app.use((error, _request, response, _next) => {
     if (error.type === "entity.too.large") {
